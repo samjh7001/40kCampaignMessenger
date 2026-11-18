@@ -1,0 +1,503 @@
+:root {
+    --bg: #030805;
+    --panel: #07130c;
+    --phosphor: #8fffb0;
+    --phosphor-dim: #4b9d68;
+    --accent: #c34b42;
+    --line: rgba(143,255,176,.38);
+    --glow: 0 0 7px rgba(112,255,153,.55);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 28px 16px;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--phosphor);
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            #102318 0%,
+            #050b07 48%,
+            #010302 100%
+        );
+
+    font-family: "Courier New", Courier, monospace;
+}
+
+.terminal-shell {
+    width: min(100%, 980px);
+}
+
+.terminal-topbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 14px;
+
+    border: 1px solid var(--line);
+    border-bottom: 0;
+
+    background: #07140c;
+
+    letter-spacing: .12em;
+    font-size: .72rem;
+
+    text-shadow: var(--glow);
+}
+
+.rec-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+
+    box-shadow: 0 0 9px var(--accent);
+}
+
+.topbar-right {
+    margin-left: auto;
+    color: var(--phosphor-dim);
+}
+
+
+/* MAIN TERMINAL SCREEN */
+
+.terminal-screen {
+    position: relative;
+    overflow: hidden;
+
+    min-height: 650px;
+
+    padding: clamp(18px, 4vw, 42px);
+
+    border: 1px solid var(--line);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 49.8%,
+            rgba(143,255,176,.035) 50%,
+            transparent 50.2%
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(0,0,0,.16) 0 1px,
+            transparent 1px 4px
+        ),
+        radial-gradient(
+            ellipse at 50% 35%,
+            #102719,
+            #06110a 75%
+        );
+
+    box-shadow:
+        0 0 28px rgba(0,0,0,.8),
+        inset 0 0 55px rgba(0,0,0,.65);
+
+    text-shadow: var(--glow);
+}
+
+
+/* CRT EFFECTS */
+
+.scanlines {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+    z-index: 4;
+
+    opacity: .2;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0 3px,
+            rgba(0,0,0,.42) 4px
+        );
+}
+
+.noise {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+    z-index: 3;
+
+    opacity: .07;
+
+    background-image: url(
+        "data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"
+    );
+}
+
+
+/* SCREEN CONTENT */
+
+.screen-header,
+.status-grid,
+.signal-row,
+.boot-log,
+.message-panel,
+.screen-footer {
+    position: relative;
+    z-index: 2;
+}
+
+.screen-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 18px;
+}
+
+.eyebrow {
+    margin: 0 0 12px;
+
+    font-weight: bold;
+    letter-spacing: .12em;
+}
+
+h1 {
+    margin: 0;
+
+    max-width: 680px;
+
+    font-size: clamp(1.05rem, 3vw, 1.7rem);
+    line-height: 1.3;
+}
+
+.subheading {
+    color: var(--phosphor-dim);
+    font-size: .78rem;
+}
+
+.aquila-mark {
+    align-self: center;
+
+    font-size: 3.4rem;
+
+    color: var(--accent);
+    opacity: .8;
+
+    text-shadow: 0 0 14px currentColor;
+}
+
+
+/* TRANSMISSION STATUS */
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+
+    margin: 22px 0;
+}
+
+.status-grid div {
+    border-left: 2px solid var(--line);
+    padding-left: 10px;
+}
+
+.status-grid span,
+.status-grid strong {
+    display: block;
+}
+
+.status-grid span {
+    color: var(--phosphor-dim);
+    font-size: .65rem;
+    margin-bottom: 6px;
+}
+
+.status-grid strong {
+    font-size: .82rem;
+}
+
+.classification {
+    color: #ffb0a8;
+}
+
+
+/* SIGNAL BAR */
+
+.signal-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-size: .72rem;
+}
+
+.signal-row > span {
+    min-width: 145px;
+}
+
+.signal-track {
+    height: 7px;
+    flex: 1;
+
+    background: #14251a;
+    border: 1px solid var(--line);
+}
+
+#signal-bar {
+    width: 0;
+    height: 100%;
+
+    background: var(--phosphor);
+    box-shadow: var(--glow);
+
+    transition: width .15s linear;
+}
+
+
+/* BOOT SEQUENCE */
+
+.boot-log {
+    margin: 28px 0;
+
+    color: var(--phosphor-dim);
+
+    font-size: .82rem;
+    line-height: 1.6;
+
+    min-height: 75px;
+}
+
+.boot-log p {
+    margin: 4px 0;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/* MESSAGE DISPLAY */
+
+.message-panel {
+    margin-top: 26px;
+
+    line-height: 1.65;
+    font-size: .9rem;
+}
+
+.message-meta {
+    border-left: 2px solid var(--line);
+    padding-left: 14px;
+
+    color: var(--phosphor-dim);
+
+    font-size: .76rem;
+}
+
+.message-meta p {
+    margin: 3px 0;
+}
+
+.message-rule {
+    margin: 20px 0;
+
+    color: var(--phosphor-dim);
+    letter-spacing: .08em;
+}
+
+.message-panel h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+.message-output p {
+    margin: 0 0 18px;
+    white-space: pre-wrap;
+}
+
+.message-signoff {
+    margin-top: 24px;
+
+    color: var(--phosphor);
+    font-weight: bold;
+}
+
+
+/* FOOTER */
+
+.screen-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-top: 36px;
+    padding-top: 12px;
+
+    border-top: 1px solid var(--line);
+
+    color: var(--phosphor-dim);
+    font-size: .64rem;
+}
+
+
+/* BUTTONS */
+
+.terminal-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    padding: 14px 0;
+}
+
+button {
+    border: 1px solid var(--line);
+
+    background: #0a1b10;
+    color: var(--phosphor);
+
+    padding: 11px 15px;
+
+    font: inherit;
+    font-size: .72rem;
+    letter-spacing: .08em;
+
+    cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+    background: #153421;
+    box-shadow: var(--glow);
+}
+
+button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.sound-toggle,
+.faction-label {
+    color: var(--phosphor-dim);
+    font-size: .7rem;
+}
+
+.faction-label {
+    margin-left: auto;
+}
+
+.disclaimer {
+    color: #52735d;
+
+    text-align: center;
+
+    font-size: .62rem;
+    letter-spacing: .12em;
+}
+
+
+/* FACTION THEMES */
+
+/* Blood Angels */
+
+body.theme-blood_angels {
+    --phosphor: #ff9b91;
+    --phosphor-dim: #b45b56;
+    --line: rgba(255,130,120,.4);
+    --accent: #f04b40;
+    --glow: 0 0 7px rgba(255,100,90,.5);
+}
+
+/* Dark Angels */
+
+body.theme-dark_angels {
+    --phosphor: #a8e9a1;
+    --phosphor-dim: #5b9560;
+    --line: rgba(132,220,140,.38);
+    --accent: #b52e28;
+}
+
+/* Tyranids */
+
+body.theme-tyranids {
+    --phosphor: #c0ef9b;
+    --phosphor-dim: #779c53;
+    --line: rgba(170,220,110,.35);
+    --accent: #b4d45a;
+}
+
+/* Orks */
+
+body.theme-orks {
+    --phosphor: #d8ff65;
+    --phosphor-dim: #8da83b;
+    --line: rgba(210,255,80,.4);
+    --accent: #e2a52a;
+    --glow: 0 0 7px rgba(210,255,80,.5);
+}
+
+/* Adeptus Mechanicus */
+
+body.theme-mechanicus {
+    --phosphor: #ffb0a0;
+    --phosphor-dim: #bd655b;
+    --line: rgba(255,120,100,.4);
+    --accent: #e23b2f;
+}
+
+/* Imperial Guard */
+
+body.theme-imperial_guard {
+    --phosphor: #a8e9b5;
+    --phosphor-dim: #639d72;
+    --line: rgba(143,255,176,.38);
+    --accent: #d1b45d;
+}
+
+
+/* MOBILE SUPPORT */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 12px 8px;
+    }
+
+    .terminal-screen {
+        min-height: 620px;
+        padding: 18px 14px;
+    }
+
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .screen-footer {
+        flex-direction: column;
+    }
+
+    .topbar-right {
+        font-size: 0;
+    }
+
+    .topbar-right #clock {
+        font-size: .7rem;
+    }
+
+    .aquila-mark {
+        font-size: 2.2rem;
+    }
+
+}
